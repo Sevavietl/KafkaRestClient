@@ -1,0 +1,25 @@
+{
+    "name": "sevavietl/kafka-rest-client",
+    "type": "library",
+    "require": {
+        "php": ">=7.1",
+        "amphp/artax": "^3.0",
+        "amphp/amp": "^2.0",
+        "marc-mabe/php-enum": "^3.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "KafkaRestClient\\": "src"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sevavietl",
+            "email": "sevavietl@gmail.com"
+        }
+    ]
+}
