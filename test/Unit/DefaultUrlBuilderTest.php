@@ -118,6 +118,17 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
+    public function test_it_builds_url_with_parameters_for_records(): void
+    {
+        $this->assertEquals(
+            'http://base_url/consumers/my_group/instances/my_instance/records?timeout=3000&max_bytes=300000',
+            $this->urlBuilder->consumers('my_group')->instances('my_instance')->records()->withParameters([
+                'timeout' => 3000,
+                'max_bytes' => 300000,
+            ])->get()
+        );
+    }
+
     public function test_it_builds_url_for_brokers(): void
     {
         $this->assertEquals(

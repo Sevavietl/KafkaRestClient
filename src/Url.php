@@ -172,4 +172,13 @@ final class Url implements StatefulInterface
 
         return $this;
     }
+
+    public function withParameters(array $parameters): self
+    {
+        if (!empty($parameters)) {
+            $this->value .= '?' . http_build_query($parameters);
+        }
+
+        return $this;
+    }
 }

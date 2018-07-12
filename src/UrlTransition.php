@@ -20,6 +20,7 @@ final class UrlTransition extends Enum
     public const SET_BEGINNING = 'SET_BEGINNING';
     public const SET_END = 'SET_END';
     public const SET_RECORDS = 'SET_RECORDS';
+    public const SET_PARAMETERS = 'SET_PARAMETERS';
 
     public const SET_BROKERS = 'SET_BROKERS';
 }

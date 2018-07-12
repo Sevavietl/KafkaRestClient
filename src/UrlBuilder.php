@@ -74,5 +74,7 @@ interface UrlBuilder
      */
     public function brokers(): UrlBuilder;
 
+    public function withParameters(array $parameters): UrlBuilder;
+
     public function get(): string;
 }

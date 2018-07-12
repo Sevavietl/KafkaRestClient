@@ -51,6 +51,7 @@ final class DefaultUrlBuilder implements UrlBuilder
                 UrlState::BEGINNING_SET => ['type' => StateInterface::TYPE_NORMAL],
                 UrlState::END_SET => ['type' => StateInterface::TYPE_NORMAL],
                 UrlState::RECORDS_SET => ['type' => StateInterface::TYPE_NORMAL],
+                UrlState::PARAMETERS_SET => ['type' => StateInterface::TYPE_NORMAL],
 
                 UrlState::BROKERS_SET => ['type' => StateInterface::TYPE_NORMAL],
             ],
@@ -69,6 +70,7 @@ final class DefaultUrlBuilder implements UrlBuilder
                 UrlTransition::SET_BEGINNING  => ['from' => [UrlState::POSITIONS_SET], 'to' => UrlState::BEGINNING_SET, 'properties' => ['method' => null, 'args' => []]],
                 UrlTransition::SET_END  => ['from' => [UrlState::POSITIONS_SET], 'to' => UrlState::END_SET, 'properties' => ['method' => null, 'args' => []]],
                 UrlTransition::SET_RECORDS  => ['from' => [UrlState::INSTANCES_SET], 'to' => UrlState::RECORDS_SET, 'properties' => ['method' => null, 'args' => []]],
+                UrlTransition::SET_PARAMETERS  => ['from' => [UrlState::RECORDS_SET], 'to' => UrlState::PARAMETERS_SET, 'properties' => ['method' => null, 'args' => []]],
 
                 UrlTransition::SET_BROKERS  => ['from' => [UrlState::BASE_URL_SET], 'to' => UrlState::BROKERS_SET, 'properties' => ['method' => null, 'args' => []]],
             ]
@@ -211,6 +213,13 @@ final class DefaultUrlBuilder implements UrlBuilder
     public function records(): UrlBuilder
     {
         $this->stateMachine->apply(UrlTransition::SET_RECORDS, ['method' => __FUNCTION__]);
+
+        return $this;
+    }
+
+    public function withParameters(array $parameters): UrlBuilder
+    {
+        $this->stateMachine->apply(UrlTransition::SET_PARAMETERS, ['method' => __FUNCTION__, 'args' => [$parameters]]);
 
         return $this;
     }

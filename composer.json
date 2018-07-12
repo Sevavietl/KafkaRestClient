@@ -15,6 +15,11 @@
             "KafkaRestClient\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "KafkaRestClient\\Test\\": "test"
+        }
+    },
     "license": "MIT",
     "authors": [
         {

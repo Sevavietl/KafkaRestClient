@@ -22,6 +22,7 @@ final class UrlState extends Enum
     public const BEGINNING_SET = 'BEGINNING_SET';
     public const END_SET = 'END_SET';
     public const RECORDS_SET = 'RECORDS_SET';
+    public const PARAMETERS_SET = 'PARAMETERS_SET';
 
     public const BROKERS_SET = 'BROKERS_SET';
 }
