@@ -32,7 +32,27 @@ interface Consumer
     public function unsubscribe();
 
     /**
+     * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#post--consumers-(string-group_name)-instances-(string-instance)-assignments
+     */
+    public function assign(array $partitions);
+
+    /**
+     * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#get--consumers-(string-group_name)-instances-(string-instance)-assignments
+     */
+    public function assignment();
+
+    /**
      * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#get--consumers-(string-group_name)-instances-(string-instance)-records
      */
     public function poll(?int $timeout = null, ?int $maxBytes = null);
+
+    /**
+     * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#post--consumers-(string-group_name)-instances-(string-instance)-offsets
+     */
+    public function commit(?\SplObjectStorage $offsets = null);
+
+    /**
+     * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#get--consumers-(string-group_name)-instances-(string-instance)-offsets
+     */
+    public function committed(array $partitions);
 }

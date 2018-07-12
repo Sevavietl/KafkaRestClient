@@ -11,6 +11,7 @@ use Amp\Promise;
 use KafkaRestClient\ConsumerConfig;
 use KafkaRestClient\DefaultUrlBuilder;
 use KafkaRestClient\KafkaRestException;
+use KafkaRestClient\TopicPartition;
 use KafkaRestClient\UrlBuilder;
 
 final class AsyncConsumer implements Consumer
@@ -143,6 +144,49 @@ final class AsyncConsumer implements Consumer
         });
     }
 
+    public function assign(array $partitions): Promise
+    {
+        return call(function () use ($partitions) {
+            $request = (new Request($this->baseUri()->assignments()->get(), 'POST'))
+                ->withHeader('Content-Type', $this->config->acceptHeader())
+                ->withBody(json_encode([
+                    'partitions' => $partitions,
+                ]));
+
+            /** @var Response $response */
+            $response = yield $this->client->request($request);
+
+            if (204 !== $response->getStatus()) {
+                throw KafkaRestException::fromJson(yield $response->getBody());
+            }
+
+            return $this;
+        });
+    }
+
+    public function assignment(): Promise
+    {
+        return call(function () {
+            $request = (new Request($this->baseUri()->assignments()->get(), 'GET'))
+                ->withHeader('Accept', $this->config->acceptHeader());
+
+            /** @var Response $response */
+            $response = yield $this->client->request($request);
+
+            if (200 !== $response->getStatus()) {
+                throw KafkaRestException::fromJson(yield $response->getBody());
+            }
+
+            $data = json_decode(yield $response->getBody(), true);
+
+            return array_reduce($data['partitions'], function (array $partitions, array $partition) {
+                $partitions[] = TopicPartition::fromArray($partition);
+
+                return $partitions;
+            }, []);
+        });
+    }
+
     public function poll(?int $timeout = null, ?int $maxBytes = null): Promise
     {
         return call(function () use ($timeout, $maxBytes) {
@@ -165,6 +209,57 @@ final class AsyncConsumer implements Consumer
             return array_map(function ($record) {
                 return ConsumerRecord::fromArray($record);
             }, json_decode(yield $response->getBody(), true));
+        });
+    }
+
+    public function commit(?\SplObjectStorage $offsets = null): Promise
+    {
+        return call(function () use ($offsets) {
+            $request = (new Request($this->baseUri()->records()->offsets()->get(), 'POST'))
+                ->withHeader('Content-Type', $this->config->contentTypeHeader());
+
+            if (null !== $offsets) {
+                $body = [];
+                /** @var TopicPartition $topicPartion */
+                foreach($offsets as $topicPartion) {
+                    $body[] = array_merge($topicPartion->jsonSerialize(), ['offset' => $offsets[$topicPartion]]);
+                }
+
+                $request = $request->withBody(json_encode($body));
+            }
+
+            /** @var Response $response */
+            $response = yield $this->client->request($request);
+
+            if (200 !== $response->getStatus()) {
+                throw KafkaRestException::fromJson(yield $response->getBody());
+            }
+        });
+    }
+
+    public function committed(array $partitions): Promise
+    {
+        return call(function () use ($partitions) {
+            $request = (new Request($this->baseUri()->records()->offsets()->get(), 'GET'))
+                ->withHeader('Accept', $this->config->contentTypeHeader())
+                ->withBody(json_encode([
+                    'partitions' => $partitions,
+                ]));
+
+            /** @var Response $response */
+            $response = yield $this->client->request($request);
+
+            if (200 !== $response->getStatus()) {
+                throw KafkaRestException::fromJson(yield $response->getBody());
+            }
+
+            $data = json_decode(yield $response->getBody(), true);
+
+            return array_reduce($data['offsets'], function (\SplObjectStorage $offsets, array $offset) {
+                $offsets->attach(TopicPartition::fromArray($offset), OffsetAndMetadata::fromArray($offset));
+
+                return $offsets;
+            }, new \SplObjectStorage());
         });
     }
 
