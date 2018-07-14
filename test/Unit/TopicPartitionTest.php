@@ -2,16 +2,16 @@
 
 namespace KafkaRestClient\Test\Unit;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\TopicPartition;
+use PHPUnit\Framework\TestCase;
 
-final class TopicPartitionTest extends Unit
+final class TopicPartitionTest extends TestCase
 {
-    public function it_can_be_created_from_array(): void
+    public function testCanBeCreatedFromArray(): void
     {
         $topicPartition = TopicPartition::fromArray([
             'topic' => $topic = 'topic',
-            'partition' => $partition = 'partition',
+            'partition' => $partition = 0,
         ]);
 
         $this->assertSame($topic, $topicPartition->topic());

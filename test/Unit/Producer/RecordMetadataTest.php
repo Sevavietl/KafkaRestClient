@@ -2,12 +2,12 @@
 
 namespace KafkaRestClient\Test\Unit\Producer;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\Producer\RecordMetadata;
+use PHPUnit\Framework\TestCase;
 
-final class RecordMetadataTest extends Unit
+final class RecordMetadataTest extends TestCase
 {
-    public function test_it_can_be_created_from_array(): void
+    public function testCanBeCreatedFromArray(): void
     {
         $recordMetadata = RecordMetadata::fromArray([
             'partition' => $partition = 0,

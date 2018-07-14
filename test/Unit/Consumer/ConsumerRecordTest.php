@@ -2,10 +2,10 @@
 
 namespace KafkaRestClient\Test\Unit\Consumer;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\Consumer\ConsumerRecord;
+use PHPUnit\Framework\TestCase;
 
-final class ConsumerRecordTest extends Unit
+final class ConsumerRecordTest extends TestCase
 {
     public function test_it_can_be_created_from_array(): void
     {

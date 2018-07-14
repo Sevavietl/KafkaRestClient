@@ -8,16 +8,16 @@ use Amp\ByteStream\InMemoryStream;
 use Amp\ByteStream\Message;
 use function Amp\Promise\wait;
 use Amp\Success;
-use Codeception\Test\Unit;
 use KafkaRestClient\Producer\AsyncProducer;
 use KafkaRestClient\Producer\ProducerRecord;
 use KafkaRestClient\Producer\RecordMetadata;
 use KafkaRestClient\ProducerConfig;
 use KafkaRestClient\UrlBuilder;
+use PHPUnit\Framework\TestCase;
 
-final class AsyncProducerTest extends Unit
+final class AsyncProducerTest extends TestCase
 {
-    public function test_it_sends_record_to_kafka(): void
+    public function testSendsRecordToKafka(): void
     {
         $config = $this->createMock(ProducerConfig::class);
         $config->method('url')->willReturn('url');

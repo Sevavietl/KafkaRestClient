@@ -2,12 +2,12 @@
 
 namespace KafkaRestClient\Test\Unit\Producer;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\Producer\ProducerRecord;
+use PHPUnit\Framework\TestCase;
 
-final class ProducerRecordTest extends Unit
+final class ProducerRecordTest extends TestCase
 {
-    public function test_it_can_be_created_from_value(): void
+    public function testCanBeCreatedFromValue(): void
     {
         $producerRecord = ProducerRecord::fromValue($topic = 'topic', $value = 'value');
 
@@ -18,7 +18,7 @@ final class ProducerRecordTest extends Unit
         $this->assertEquals($value, $producerRecord->value());
     }
 
-    public function test_it_can_be_created_from_key_and_value(): void
+    public function testCanBeCreatedFromKeyAndValue(): void
     {
         $producerRecord = ProducerRecord::fromKeyAndValue($topic = 'topic', $key = 'key', $value = 'value');
 

@@ -2,10 +2,10 @@
 
 namespace KafkaRestClient\Test\Unit;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\DefaultUrlBuilder;
+use PHPUnit\Framework\TestCase;
 
-final class DefaultUrlBuilderTest extends Unit
+final class DefaultUrlBuilderTest extends TestCase
 {
     /** @var DefaultUrlBuilder */
     private $urlBuilder;
@@ -13,24 +13,24 @@ final class DefaultUrlBuilderTest extends Unit
     /** @var string */
     private $baseUrl;
 
-    protected function _before()
+    protected function setUp(): void
     {
         $this->urlBuilder = new DefaultUrlBuilder();
         $this->baseUrl = 'http://base_url';
         $this->urlBuilder = $this->urlBuilder->baseUrl($this->baseUrl);
     }
 
-    public function test_it_builds_url_for_topics(): void
+    public function testBuildsUrlForTopics(): void
     {
         $this->assertEquals('http://base_url/topics', $this->urlBuilder->topics()->get());
     }
 
-    public function test_it_builds_url_for_topic(): void
+    public function testBuildsUrlForTopic(): void
     {
         $this->assertEquals('http://base_url/topics/my_topic', $this->urlBuilder->topics('my_topic')->get());
     }
 
-    public function test_it_builds_url_for_partitions(): void
+    public function testBuildsUrlForPartitions(): void
     {
         $this->assertEquals(
             'http://base_url/topics/my_topic/partitions',
@@ -38,7 +38,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_partition(): void
+    public function testBuildsUrlForPartition(): void
     {
         $this->assertEquals(
             'http://base_url/topics/my_topic/partitions/0',
@@ -46,7 +46,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_consumers_group(): void
+    public function testBuildsUrlForConsumersGroup(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group',
@@ -54,7 +54,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_consumer_instance(): void
+    public function testBuildsUrlForConsumerInstance(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance',
@@ -62,7 +62,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_offsets(): void
+    public function testBuildsUrlForOffsets(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/offsets',
@@ -70,7 +70,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_subscription(): void
+    public function testBuildsUrlForSubscription(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/subscription',
@@ -78,7 +78,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_assignments(): void
+    public function testBuildsUrlForAssignments(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/assignments',
@@ -86,7 +86,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_positions(): void
+    public function testBuildsUrlForPositions(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/positions',
@@ -94,7 +94,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_beginning(): void
+    public function testBuildsUrlForBeginning(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/positions/beginning',
@@ -102,7 +102,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_end(): void
+    public function testBuildsUrlForEnd(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/positions/end',
@@ -110,7 +110,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_records(): void
+    public function testBuildsUrlForRecords(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/records',
@@ -118,7 +118,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_with_parameters_for_records(): void
+    public function testBuildsUrlWithParametersForRecords(): void
     {
         $this->assertEquals(
             'http://base_url/consumers/my_group/instances/my_instance/records?timeout=3000&max_bytes=300000',
@@ -129,7 +129,7 @@ final class DefaultUrlBuilderTest extends Unit
         );
     }
 
-    public function test_it_builds_url_for_brokers(): void
+    public function testBuildsUrlForBrokers(): void
     {
         $this->assertEquals(
             'http://base_url/brokers',

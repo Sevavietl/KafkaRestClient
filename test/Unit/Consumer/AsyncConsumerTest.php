@@ -8,7 +8,6 @@ use Amp\ByteStream\InMemoryStream;
 use Amp\ByteStream\Message;
 use function Amp\Promise\wait;
 use Amp\Success;
-use Codeception\Test\Unit;
 use KafkaRestClient\Consumer\AsyncConsumer;
 use KafkaRestClient\Consumer\AutoOffsetReset;
 use KafkaRestClient\Consumer\ConsumerRecord;
@@ -17,8 +16,9 @@ use KafkaRestClient\EmbeddedFormat;
 use KafkaRestClient\TopicPartition;
 use KafkaRestClient\UrlBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-final class AsyncConsumerTest extends Unit
+final class AsyncConsumerTest extends TestCase
 {
     /** @var MockObject */
     private $config;
@@ -29,7 +29,7 @@ final class AsyncConsumerTest extends Unit
     /** @var MockObject */
     private $urlBuilder;
 
-    protected function _before()
+    protected function setUp(): void
     {
         $this->config = $this->createMock(ConsumerConfig::class);
         $this->config->method('url')->willReturn('url');
@@ -47,7 +47,7 @@ final class AsyncConsumerTest extends Unit
         $this->urlBuilder->method('consumers')->with()->willReturn($this->urlBuilder);
     }
 
-    public function test_it_creates_consumer_instance(): void
+    public function testCreatesConsumerInstance(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -65,7 +65,7 @@ final class AsyncConsumerTest extends Unit
         $this->assertSame($instanceId, $consumer->instanceId());
     }
 
-    public function test_it_can_delete_consumer_instance(): void
+    public function testCanDeleteConsumerInstance(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(204);
@@ -78,7 +78,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->delete());
     }
 
-    public function test_it_can_subscribe_to_list_of_topics(): void
+    public function testCanSubscribeToListOfTopics(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(204);
@@ -93,7 +93,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->subscribe($topics));
     }
 
-    public function test_it_can_get_list_of_subscribed_topics(): void
+    public function testCanGetListOfSubscribedTopics(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -116,7 +116,7 @@ final class AsyncConsumerTest extends Unit
         $this->assertSame($topics, wait($consumer->subscription($topics)));
     }
 
-    public function test_it_can_unsubscribe(): void
+    public function testCanUnsubscribe(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(204);
@@ -129,7 +129,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->unsubscribe());
     }
 
-    public function test_it_can_assign_list_of_partitions(): void
+    public function testCanAssignListOfPartitions(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(204);
@@ -147,7 +147,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assign($partitions));
     }
 
-    public function test_it_gets_list_of_assigned_partitions(): void
+    public function testGetsListOfAssignedPartitions(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -175,7 +175,7 @@ final class AsyncConsumerTest extends Unit
         $this->assertContainsOnlyInstancesOf(TopicPartition::class, $partitions);
     }
 
-    public function test_it_can_poll_records(): void
+    public function testCanPollRecords(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -208,7 +208,7 @@ final class AsyncConsumerTest extends Unit
         $this->assertContainsOnlyInstancesOf(ConsumerRecord::class, $consumerRecords);
     }
 
-    public function it_commits_all_offsets(): void
+    public function testCommitsAllOffsets(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -222,7 +222,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit());
     }
 
-    public function it_commits_list_of_offsets(): void
+    public function testCommitsListOfOffsets(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);
@@ -240,7 +240,7 @@ final class AsyncConsumerTest extends Unit
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit());
     }
 
-    public function it_gets_last_committed_offsets(): void
+    public function testGetsLastCommittedOffsets(): void
     {
         $response = $this->createMock(Response::class);
         $response->method('getStatus')->willReturn(200);

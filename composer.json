@@ -5,10 +5,12 @@
         "php": ">=7.1",
         "amphp/artax": "^3.0",
         "amphp/amp": "^2.0",
-        "marc-mabe/php-enum": "^3.0"
+        "marc-mabe/php-enum": "^3.0",
+        "yohang/finite": "^1.1"
     },
     "require-dev": {
-        "codeception/codeception": "^2.4"
+        "phpunit/phpunit": "^7",
+        "phpstan/phpstan": "^0.10.1"
     },
     "autoload": {
         "psr-4": {

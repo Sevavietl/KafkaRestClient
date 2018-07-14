@@ -2,13 +2,13 @@
 
 namespace KafkaRestClient\Test\Unit;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\ApiVersion;
 use KafkaRestClient\CommonConfig;
 use KafkaRestClient\EmbeddedFormat;
 use KafkaRestClient\SerializationFormat;
+use PHPUnit\Framework\TestCase;
 
-final class CommonConfigTest extends Unit
+final class CommonConfigTest extends TestCase
 {
     /** @var CommonConfig */
     private $commonConfig;
@@ -25,7 +25,7 @@ final class CommonConfigTest extends Unit
     /** @var SerializationFormat */
     private $serializationFormat;
 
-    protected function _before()
+    protected function setUp(): void
     {
         $this->commonConfig = CommonConfig::fromArray([
             'url' => $this->url = 'url',
@@ -35,7 +35,7 @@ final class CommonConfigTest extends Unit
         ]);
     }
 
-    public function test_it_can_be_constructed_from_array(): void
+    public function testCanBeConstructedFromArray(): void
     {
         $this->assertSame($this->url, $this->commonConfig->url());
         $this->assertSame($this->embeddedFormat, $this->commonConfig->embeddedFormat());
@@ -43,12 +43,12 @@ final class CommonConfigTest extends Unit
         $this->assertSame($this->serializationFormat, $this->commonConfig->serializationFormat());
     }
 
-    public function test_it_can_form_content_type_header(): void
+    public function testFormsContentTypeHeader(): void
     {
         $this->assertEquals('application/vnd.kafka.json.v2+json', $this->commonConfig->contentTypeHeader());
     }
 
-    public function test_it_can_form_accept_header(): void
+    public function testFormsAcceptHeader(): void
     {
         $this->assertEquals('application/vnd.kafka.v2+json', $this->commonConfig->acceptHeader());
     }

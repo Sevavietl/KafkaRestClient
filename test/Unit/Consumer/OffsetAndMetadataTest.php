@@ -2,10 +2,10 @@
 
 namespace KafkaRestClient\Test\Unit\Consumer;
 
-use Codeception\Test\Unit;
 use KafkaRestClient\Consumer\OffsetAndMetadata;
+use PHPUnit\Framework\TestCase;
 
-final class OffsetAndMetadataTest extends Unit
+final class OffsetAndMetadataTest extends TestCase
 {
     public function it_can_be_created_from_array(): void
     {
