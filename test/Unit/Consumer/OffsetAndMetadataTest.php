@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 final class OffsetAndMetadataTest extends TestCase
 {
-    public function it_can_be_created_from_array(): void
+    public function testCanBeCreatedFromArray(): void
     {
         $offsetAndMetadata = OffsetAndMetadata::fromArray([
             'offset' => $offset = 20,
