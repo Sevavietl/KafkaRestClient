@@ -11,6 +11,8 @@ install:
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
+  - ./vendor/bin/phpstan analyze src/ --level 7
+  - ./vendor/bin/phpstan analyze test/ --level 4
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_success:

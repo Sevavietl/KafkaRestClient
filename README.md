@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.com/Sevavietl/KafkaRestClient.svg?branch=master)](https://travis-ci.com/Sevavietl/KafkaRestClient)
 [![Coverage Status](https://coveralls.io/repos/github/Sevavietl/KafkaRestClient/badge.svg)](https://coveralls.io/github/Sevavietl/KafkaRestClient)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 ## Features
 

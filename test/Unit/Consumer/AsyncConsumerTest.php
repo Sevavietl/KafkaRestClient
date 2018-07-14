@@ -109,11 +109,9 @@ final class AsyncConsumerTest extends TestCase
         $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
         $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
-        $topics = ['test1', 'test2'];
-
         $consumer = (new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer');
 
-        $this->assertSame($topics, wait($consumer->subscription($topics)));
+        $this->assertSame($topics, wait($consumer->subscription()));
     }
 
     public function testCanUnsubscribe(): void
