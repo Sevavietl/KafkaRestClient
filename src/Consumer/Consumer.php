@@ -6,6 +6,8 @@ interface Consumer
 {
     public function withInstanceId(string $instanceId): Consumer;
 
+    public function instanceId(): string;
+
     /**
      * @see https://docs.confluent.io/current/kafka-rest/docs/api.html#post--consumers-(string-group_name)
      */
