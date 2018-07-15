@@ -6,7 +6,8 @@
         "amphp/artax": "^3.0",
         "amphp/amp": "^2.0",
         "marc-mabe/php-enum": "^3.0",
-        "yohang/finite": "^1.1"
+        "yohang/finite": "^1.1",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^7",
