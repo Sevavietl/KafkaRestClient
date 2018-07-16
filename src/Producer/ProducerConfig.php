@@ -20,31 +20,31 @@ final class ProducerConfig implements ProducerConfigInterface
 
     public function url(): string
     {
-        $this->commonConfig->url();
+        return $this->commonConfig->url();
     }
 
     public function embeddedFormat(): EmbeddedFormat
     {
-        $this->commonConfig->embeddedFormat();
+        return $this->commonConfig->embeddedFormat();
     }
 
     public function apiVersion(): ApiVersion
     {
-        $this->commonConfig->apiVersion();
+        return $this->commonConfig->apiVersion();
     }
 
     public function serializationFormat(): SerializationFormat
     {
-        $this->commonConfig->serializationFormat();
+        return $this->commonConfig->serializationFormat();
     }
 
     public function contentTypeHeader(): string
     {
-        $this->commonConfig->contentTypeHeader();
+        return $this->commonConfig->contentTypeHeader();
     }
 
     public function acceptHeader(): string
     {
-        $this->commonConfig->acceptHeader();
+        return $this->commonConfig->acceptHeader();
     }
 }
