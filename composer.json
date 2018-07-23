@@ -1,5 +1,7 @@
 {
     "name": "sevavietl/kafka-rest-client",
+    "description": "Asynchronous and synchronous http client for Kafka REST Proxy",
+    "keywords": ["kafka", "kafka-rest-proxy", "asynchronous", "artax", "guzzle"],
     "type": "library",
     "require": {
         "php": ">=7.1",

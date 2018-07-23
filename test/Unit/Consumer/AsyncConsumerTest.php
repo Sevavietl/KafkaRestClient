@@ -50,14 +50,14 @@ final class AsyncConsumerTest extends TestCase
     public function testCreatesConsumerInstance(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $response->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $response->expects($this->once())->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
             'instance_id' => $instanceId = 'my_consumer',
             'base_uri' => $baseUri = 'http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer',
         ]))));
-        $this->client->method('request')->willReturn(new Success($response));
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup');
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup');
 
         /** @var AsyncConsumer $consumer */
         $consumer = wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->create());
@@ -68,12 +68,11 @@ final class AsyncConsumerTest extends TestCase
     public function testCanDeleteConsumerInstance(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(204);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(204);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->delete());
     }
@@ -81,12 +80,12 @@ final class AsyncConsumerTest extends TestCase
     public function testCanSubscribeToListOfTopics(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(204);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(204);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('subscription')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
         $topics = ['test1', 'test2'];
 
@@ -96,18 +95,18 @@ final class AsyncConsumerTest extends TestCase
     public function testCanGetListOfSubscribedTopics(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $response->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $response->expects($this->once())->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
             'topics' => $topics = [
                 'test1',
                 'test2',
             ]
         ]))));
-        $this->client->method('request')->willReturn(new Success($response));
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('subscription')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
         $consumer = (new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer');
 
@@ -117,12 +116,12 @@ final class AsyncConsumerTest extends TestCase
     public function testCanUnsubscribe(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(204);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(204);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('subscription')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->unsubscribe());
     }
@@ -130,12 +129,12 @@ final class AsyncConsumerTest extends TestCase
     public function testCanAssignListOfPartitions(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(204);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(204);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('assignments')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/assignments');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('assignments')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/assignments');
 
         $partitions = [
             TopicPartition::fromArray(['topic' => 'test', 'partition' => 0]),
@@ -148,8 +147,8 @@ final class AsyncConsumerTest extends TestCase
     public function testGetsListOfAssignedPartitions(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $response->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $response->expects($this->once())->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
             'partitions' => [
                 [
                     'topic' => 'test',
@@ -161,11 +160,11 @@ final class AsyncConsumerTest extends TestCase
                 ]
             ]
         ]))));
-        $this->client->method('request')->willReturn(new Success($response));
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('assignments')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/assignments');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('assignments')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/assignments');
 
         $partitions = wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assignment());
 
@@ -176,8 +175,8 @@ final class AsyncConsumerTest extends TestCase
     public function testCanPollRecords(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $response->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $response->expects($this->once())->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
             [
                 'topic' => 'test',
                 'key' => 'somekey',
@@ -193,11 +192,12 @@ final class AsyncConsumerTest extends TestCase
                 'offset' => 11,
             ]
         ]))));
-        $this->client->method('request')->willReturn(new Success($response));
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('records')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('withParameters')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
         $consumer = (new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer');
         $consumerRecords = wait($consumer->poll());
@@ -209,13 +209,12 @@ final class AsyncConsumerTest extends TestCase
     public function testCommitsAllOffsets(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('offsets')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('offsets')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
 
         wait((new AsyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit());
     }
@@ -223,13 +222,12 @@ final class AsyncConsumerTest extends TestCase
     public function testCommitsListOfOffsets(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $this->client->method('request')->willReturn(new Success($response));
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('offsets')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('offsets')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
 
         $offsets = new \SplObjectStorage();
         $offsets->attach(TopicPartition::fromArray(['topic' => 'test', 'partition' => 0]), 20);
@@ -241,8 +239,8 @@ final class AsyncConsumerTest extends TestCase
     public function testGetsLastCommittedOffsets(): void
     {
         $response = $this->createMock(Response::class);
-        $response->method('getStatus')->willReturn(200);
-        $response->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
+        $response->expects($this->once())->method('getStatus')->willReturn(200);
+        $response->expects($this->once())->method('getBody')->willReturn(new Message(new InMemoryStream(json_encode([
             'offsets' => [
                 [
                     'topic' => 'test',
@@ -259,12 +257,11 @@ final class AsyncConsumerTest extends TestCase
             ]
         ]))));
 
-        $this->client->method('request')->willReturn(new Success($response));
+        $this->client->expects($this->once())->method('request')->willReturn(new Success($response));
 
-        $this->urlBuilder->method('instances')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('subscription')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('offsets')->willReturn($this->urlBuilder);
-        $this->urlBuilder->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
+        $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('offsets')->willReturn($this->urlBuilder);
+        $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
 
         $partitions = [
             TopicPartition::fromArray(['topic' => 'test', 'partition' => 0]),

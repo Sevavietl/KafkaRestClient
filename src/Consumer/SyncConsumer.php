@@ -58,7 +58,7 @@ final class SyncConsumer implements Consumer
                 'format' => $this->config->embeddedFormat()->getValue(),
                 'auto.offset.reset' => $this->config->autoOffsetReset()->getValue(),
                 'auto.commit.enable' => $this->config->autoCommitEnable(),
-            ])) ?: null
+            ], function ($property) { return null !== $property; })) ?: null
         );
 
         $response = $this->client->send($request);

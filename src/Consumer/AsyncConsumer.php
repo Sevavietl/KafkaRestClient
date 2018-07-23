@@ -58,7 +58,7 @@ final class AsyncConsumer implements Consumer
                     'format' => $this->config->embeddedFormat()->getValue(),
                     'auto.offset.reset' => $this->config->autoOffsetReset()->getValue(),
                     'auto.commit.enable' => $this->config->autoCommitEnable(),
-                ])));
+                ], function ($property) { return null !== $property; })));
 
             /** @var Response $response */
             $response = yield $this->client->request($request);
@@ -215,7 +215,7 @@ final class AsyncConsumer implements Consumer
     public function commit(?\SplObjectStorage $offsets = null): Promise
     {
         return call(function () use ($offsets) {
-            $request = (new Request($this->baseUri()->records()->offsets()->get(), 'POST'))
+            $request = (new Request($this->baseUri()->offsets()->get(), 'POST'))
                 ->withHeader('Content-Type', $this->config->contentTypeHeader());
 
             if (null !== $offsets) {
@@ -240,7 +240,7 @@ final class AsyncConsumer implements Consumer
     public function committed(array $partitions): Promise
     {
         return call(function () use ($partitions) {
-            $request = (new Request($this->baseUri()->records()->offsets()->get(), 'GET'))
+            $request = (new Request($this->baseUri()->offsets()->get(), 'GET'))
                 ->withHeader('Accept', $this->config->contentTypeHeader())
                 ->withBody(json_encode([
                     'partitions' => $partitions,
