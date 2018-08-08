@@ -18,9 +18,6 @@ use PHPUnit\Framework\TestCase;
 final class SyncConsumerTest extends TestCase
 {
     /** @var MockObject */
-    private $config;
-
-    /** @var MockObject */
     private $client;
 
     /** @var MockObject */
@@ -28,15 +25,6 @@ final class SyncConsumerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->config = $this->createMock(ConsumerConfig::class);
-        $this->config->method('url')->willReturn('url');
-        $this->config->method('embeddedFormat')->willReturn(EmbeddedFormat::JSON());
-        $this->config->method('contentTypeHeader')->willReturn('contentTypeHeader');
-        $this->config->method('acceptHeader')->willReturn('acceptHeader');
-        $this->config->method('autoOffsetReset')->willReturn(AutoOffsetReset::LATEST());
-        $this->config->method('autoCommitEnable')->willReturn(true);
-        $this->config->method('autoCommitIntervalMs')->willReturn(1000);
-
         $this->client = $this->createMock(ClientInterface::class);
 
         $this->urlBuilder = $this->createMock(UrlBuilder::class);
@@ -56,7 +44,7 @@ final class SyncConsumerTest extends TestCase
 
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup');
 
-        $consumer = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->create();
+        $consumer = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->create();
 
         $this->assertSame($instanceId, $consumer->instanceId());
     }
@@ -70,7 +58,7 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('instances')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
-        (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->delete();
+        (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->delete();
     }
 
     public function testCanSubscribeToListOfTopics(): void
@@ -85,7 +73,7 @@ final class SyncConsumerTest extends TestCase
 
         $topics = ['test1', 'test2'];
 
-        $consumer = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->subscribe($topics);
+        $consumer = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->subscribe($topics);
 
         $this->assertInstanceOf(SyncConsumer::class, $consumer);
     }
@@ -106,7 +94,7 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('subscription')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
-        $consumer = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer');
+        $consumer = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer');
 
         $this->assertSame($topics, $consumer->subscription());
     }
@@ -121,7 +109,7 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('subscription')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
-        (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->unsubscribe();
+        (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->unsubscribe();
     }
 
     public function testCanAssignListOfPartitions(): void
@@ -139,7 +127,7 @@ final class SyncConsumerTest extends TestCase
             TopicPartition::fromArray(['topic' => 'test', 'partition' => 1]),
         ];
 
-        (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assign($partitions);
+        (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assign($partitions);
     }
 
 
@@ -165,7 +153,7 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('assignments')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/assignments');
 
-        $partitions = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assignment();
+        $partitions = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->assignment();
 
         $this->assertCount(2, $partitions);
         $this->assertContainsOnlyInstancesOf(TopicPartition::class, $partitions);
@@ -198,12 +186,20 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('withParameters')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/subscription');
 
-        $consumerRecords = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))
+        $consumerRecords = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))
             ->withInstanceId('my_consumer')
             ->poll();
 
         $this->assertCount(2, $consumerRecords);
         $this->assertContainsOnlyInstancesOf(ConsumerRecord::class, $consumerRecords);
+    }
+
+    public function testCommitsNothingWhenAutoCommitEnabled(): void
+    {
+        $this->assertInstanceOf(
+            SyncConsumer::class,
+            (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit()
+        );
     }
 
     public function testCommitsAllOffsets(): void
@@ -216,7 +212,7 @@ final class SyncConsumerTest extends TestCase
         $this->urlBuilder->expects($this->once())->method('offsets')->willReturn($this->urlBuilder);
         $this->urlBuilder->expects($this->once())->method('get')->willReturn('http://proxy-instance.kafkaproxy.example.com/consumers/testgroup/instances/my_consumer/offsets');
 
-       (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit();
+       (new SyncConsumer($this->config(false), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit();
     }
 
     public function testCommitsListOfOffsets(): void
@@ -233,7 +229,7 @@ final class SyncConsumerTest extends TestCase
         $offsets->attach(TopicPartition::fromArray(['topic' => 'test', 'partition' => 0]), 20);
         $offsets->attach(TopicPartition::fromArray(['topic' => 'test', 'partition' => 1]), 30);
 
-        (new SyncConsumer($this->config, $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit($offsets);
+        (new SyncConsumer($this->config(false), $this->client, $this->urlBuilder))->withInstanceId('my_consumer')->commit($offsets);
     }
 
     public function testGetsLastCommittedOffsets(): void
@@ -267,7 +263,7 @@ final class SyncConsumerTest extends TestCase
             TopicPartition::fromArray(['topic' => 'test', 'partition' => 1]),
         ];
 
-        $offsets = (new SyncConsumer($this->config, $this->client, $this->urlBuilder))
+        $offsets = (new SyncConsumer($this->config(), $this->client, $this->urlBuilder))
             ->withInstanceId('my_consumer')
             ->committed($partitions);
 
@@ -282,5 +278,19 @@ final class SyncConsumerTest extends TestCase
         rewind($stream);
 
         return new Stream($stream);
+    }
+
+    private function config(bool $autoCommitEnable = true): MockObject
+    {
+        $config = $this->createMock(ConsumerConfig::class);
+        $config->method('url')->willReturn('url');
+        $config->method('embeddedFormat')->willReturn(EmbeddedFormat::JSON());
+        $config->method('contentTypeHeader')->willReturn('contentTypeHeader');
+        $config->method('acceptHeader')->willReturn('acceptHeader');
+        $config->method('autoOffsetReset')->willReturn(AutoOffsetReset::LATEST());
+        $config->method('autoCommitEnable')->willReturn($autoCommitEnable);
+        $config->method('autoCommitIntervalMs')->willReturn(1000);
+
+        return $config;
     }
 }

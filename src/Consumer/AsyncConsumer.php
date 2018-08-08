@@ -215,6 +215,10 @@ final class AsyncConsumer implements Consumer
     public function commit(?\SplObjectStorage $offsets = null): Promise
     {
         return call(function () use ($offsets) {
+            if ($this->config->autoCommitEnable()) {
+                return $this;
+            }
+
             $request = (new Request($this->baseUri()->offsets()->get(), 'POST'))
                 ->withHeader('Content-Type', $this->config->contentTypeHeader());
 
@@ -222,7 +226,7 @@ final class AsyncConsumer implements Consumer
                 $body = [];
                 /** @var TopicPartition $topicPartion */
                 foreach($offsets as $topicPartion) {
-                    $body[] = array_merge($topicPartion->jsonSerialize(), ['offset' => $offsets[$topicPartion]]);
+                    $body['offsets'][] = array_merge($topicPartion->jsonSerialize(), ['offset' => $offsets[$topicPartion]]);
                 }
 
                 $request = $request->withBody(json_encode($body));
@@ -234,6 +238,8 @@ final class AsyncConsumer implements Consumer
             if (200 !== $response->getStatus()) {
                 throw KafkaRestException::fromJson(yield $response->getBody());
             }
+
+            return $this;
         });
     }
 

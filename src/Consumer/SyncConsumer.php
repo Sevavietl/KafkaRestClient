@@ -221,13 +221,17 @@ final class SyncConsumer implements Consumer
 
     public function commit(?\SplObjectStorage $offsets = null): SyncConsumer
     {
+        if ($this->config->autoCommitEnable()) {
+            return $this;
+        }
+
         $body = null;
 
         if (null !== $offsets) {
             $body = [];
             /** @var TopicPartition $topicPartion */
             foreach($offsets as $topicPartion) {
-                $body[] = array_merge($topicPartion->jsonSerialize(), ['offset' => $offsets[$topicPartion]]);
+                $body['offsets'][] = array_merge($topicPartion->jsonSerialize(), ['offset' => $offsets[$topicPartion]]);
             }
             $body = \json_encode($body) ?: null;
         }
